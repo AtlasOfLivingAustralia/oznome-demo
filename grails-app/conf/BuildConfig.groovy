@@ -28,6 +28,7 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+        compile "org.jsoup:jsoup:1.8.2"
     }
 
     plugins {
@@ -36,6 +37,7 @@ grails.project.dependency.resolution = {
         build ":rest-client-builder:2.0.3"
 
         compile ":ajaxanywhere:1.0-SNAPSHOT"
+        compile ":mongodb:3.0.3"
 
         runtime (":ala-bootstrap2:2.1") {
             exclude "jquery"
