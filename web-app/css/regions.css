@@ -70,7 +70,7 @@
 
 #accordion .ui-accordion-content {
     height: auto !important;
-    max-height: 205px;
+    max-height: 400px;
 }
 
 #accordion ul {
