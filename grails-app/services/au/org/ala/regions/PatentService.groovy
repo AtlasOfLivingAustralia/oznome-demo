@@ -11,12 +11,13 @@ import static groovyx.gpars.GParsPool.withPool
 
 class PatentService {
 
-    static final String AUSPAT_URL = 'http://pericles.ipaustralia.gov.au/ols/auspat/advancedSearch.do?resultsPerPage=1000&includeTextSearch=on&submit=Search&queryString='
+    static final String AUSPAT_URL = 'http://pericles.ipaustralia.gov.au/ols/auspat/advancedSearch.do?resultsPerPage=100&includeTextSearch=on&submit=Search&queryString='
 
     static final String SEARCH_RESULTS_TABLE = "#rawresults tbody tr.metadata"
 
     static final int THREADS = 5
     static final int MAX_CACHE_AGE_MINUTES = 60
+    static final int CONNECT_TIMEOUT_MILLIS = 30000
 
     def fetchAll(json) {
         Map<String, String> results = [:] as ConcurrentHashMap
@@ -43,7 +44,7 @@ class PatentService {
         String query = "(\"${speciesName}\" IN CS) OR (\"${speciesName}\" IN TI) OR (\"${speciesName}\" IN AB)"
         query = URLEncoder.encode(query, "UTF-8")
 
-        Document doc = Jsoup.connect("${AUSPAT_URL}${query}").timeout(30000).cookie("hasAccepted", "true").get()
+        Document doc = Jsoup.connect("${AUSPAT_URL}${query}").timeout(CONNECT_TIMEOUT_MILLIS).cookie("hasAccepted", "true").get()
 
         def searchResults = doc.select(SEARCH_RESULTS_TABLE)
 
