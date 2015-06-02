@@ -95,8 +95,6 @@ var RegionWidget = function (config) {
     var defaultToYear = new Date().getFullYear();
     var defaultTab = 'speciesTab';
     var regionMap;
-    var timeControls;
-    var taxonomyWidget;
 
     /**
      * Essential values to maintain the state of the widget when the user interacts with it
@@ -157,13 +155,6 @@ var RegionWidget = function (config) {
             selectSpecies(this);
         });
 
-        // Initialize info message
-        $('#timeControlsInfo').popover();
-
-        initializeViewRecordsButton();
-
-        // Initialize `nload records dialog
-        $('#downloadRecordsModal').modal({show: false});
     };
 
     /**
@@ -178,30 +169,6 @@ var RegionWidget = function (config) {
         $('#' + state.tab).click();
 
     };
-
-    /**
-     *
-     */
-    var initializeViewRecordsButton = function() {
-        $('#viewRecords').click(function(event) {
-            event.preventDefault();
-            // check what group is active
-            var url = urls.biocacheWebappUrl + '/occurrences/search?q=' + decodeURI(state.q) +
-                '&fq=rank:(species OR subspecies)';
-            if (!regionWidget.isDefaultFromYear() || !regionWidget.isDefaultToYear()) {
-                url += '&fq=' + region.buildTimeFacet();
-            }
-            if (state.group != 'ALL_SPECIES') {
-                if (state.subgroup) {
-                    url += '&fq=species_subgroup:"' + state.subgroup + '"';
-                } else {
-                    url += '&fq=species_group:"' + state.group + '"';
-                }
-            }
-            document.location.href = url;
-        });
-    };
-
 
     /**
      * Updates state with new values and preserve state for when reloading page
@@ -229,8 +196,6 @@ var RegionWidget = function (config) {
         $("#species tbody tr.infoRowLinks").hide();
         var nextTr = $(row).next('tr');
         $(row).addClass('speciesSelected');
-        $(nextTr).addClass('speciesSelected');
-        $(row).next('tr').show();
         // Update state
         updateState({guid: $(row).attr('id')});
         regionMap.reloadRecordsOnMap();
@@ -341,10 +306,6 @@ var RegionWidget = function (config) {
             return defaultToYear;
         },
 
-        getTimeControls: function() {
-            return timeControls;
-        },
-
         updateDateRange: function(from, to) {
             updateState({
                 from: from,
@@ -354,10 +315,6 @@ var RegionWidget = function (config) {
                 $('#' + getSubgroupId()).click();
             } else {
                 $('#' + getGroupId()).click();
-            }
-            // Update taxonomy chart
-            if (taxonomyChart) {
-                taxonomyChart.updateQuery(taxonomyWidget.getQuery() + "&fq=" + region.buildTimeFacet());
             }
         },
 
@@ -395,7 +352,7 @@ var RegionWidget = function (config) {
             if (isNaN(totalRecords)) {
                 $('#totalRecords').text('');
             } else {
-                $('#totalRecords').text('(' + region.format(parseInt($('#moreSpeciesZone').attr('totalRecords'))) + ')');
+                $('#totalRecords').text(region.format(parseInt($('#moreSpeciesZone').attr('totalRecords'))));
             }
 
             $('#occurrenceRecords').effect('highlight', {color: '#fee6d2'}, 2000);
@@ -412,201 +369,11 @@ var RegionWidget = function (config) {
 
         getMap: function() {
             return regionMap;
-        },
-
-        setTimeControls: function(tc) {
-            timeControls = tc;
-        },
-
-        setTaxonomyWidget: function(tw) {
-            taxonomyWidget = tw;
-        },
-
-        getTaxonomyWidget: function() {
-            return taxonomyWidget;
         }
-    };
-
-    init(config);
-    return _public;
-};
-
-/**
- *
- * @param config
- * @returns {{}}
- * @constructor
- */
-var RegionTimeControls = function(config) {
-
-    var timeSlider;
-    var CONTROL_STATES = {
-        PLAYING: 0,
-        PAUSED: 1,
-        STOPPED: 2
-    };
-    var state = CONTROL_STATES.STOPPED;
-    var refreshInterval;
-    var playTimeRange;
-
-    var init = function(config) {
-        timeSlider = $('#timeSlider')
-            .slider({
-                min: regionWidget.getDefaultFromYear(),
-                max: regionWidget.getDefaultToYear(),
-                range: true,
-                values: [regionWidget.getCurrentState().from, regionWidget.getCurrentState().to],
-                create: function() {
-                    updateTimeRange($('#timeSlider').slider('values'));
-                },
-                slide: function( event, ui ) {
-                    updateTimeRange(ui.values);
-                },
-                change: function( event, ui ) {
-                    if (!(state === CONTROL_STATES.PLAYING)
-                            || (ui.values[0] != ui.values[1] && ui.values[1] - ui.values[0] <= 10 )) {
-                        regionWidget.updateDateRange(ui.values[0], ui.values[1]);
-                    }
-                    updateTimeRange(ui.values);
-                }
-            })
-
-            .slider("pips", {
-                rest: "pip",
-                step: 10
-            })
-            .slider("float", {});
-
-        initializeTimeControlsEvents();
-    };
-
-    var initializeTimeControlsEvents = function() {
-        // Initialize play button
-        $('#playButton').on('click', function(){
-            play();
-        });
-
-        // Initialize stop button
-        $('#stopButton').on('click', function(){
-            stop();
-        });
-
-        // Initialize pause button
-        $('#pauseButton').on('click', function(){
-            pause();
-        });
-
-        // Initialize reset button
-        $('#resetButton').on('click', function(){
-            reset();
-        });
-
-    };
-
-    var increaseTimeRangeByADecade = function() {
-        var incrementTo = (regionWidget.getDefaultToYear() - playTimeRange[1]) < 10 ? regionWidget.getDefaultToYear() - playTimeRange[1] : 10;
-        if (incrementTo != 0) {
-            $('#timeSlider').slider('values', [playTimeRange[0] + 10, playTimeRange[1] + incrementTo]);
-            playTimeRange = $('#timeSlider').slider('values');
-        } else {
-            stop();
-        }
-    };
-
-    var play = function() {
-
-        switch (state) {
-            case CONTROL_STATES.STOPPED:
-                // Start playing from the beginning
-                // Update state before updating slider values
-                state = CONTROL_STATES.PLAYING;
-                $('#timeSlider').slider('values', [regionWidget.getDefaultFromYear(), regionWidget.getDefaultFromYear() + 10]);
-                break;
-            case CONTROL_STATES.PAUSED:
-                // Resume playing
-                // Update state before updating slider values
-                state = CONTROL_STATES.PLAYING;
-                $('#timeSlider').slider('values', [playTimeRange[0], playTimeRange[1]]);
-                break;
-        }
-
-        // For SVG elements the addClass and removeClass jQuery method do not work
-        $('#pauseButton').removeClass('selected').trigger('selected');
-        $('#playButton').addClass('selected').trigger('selected');
-        playTimeRange = $('#timeSlider').slider('values');
-        refreshInterval = setInterval(function () {
-            increaseTimeRangeByADecade();
-        }, 4000);
-    };
-
-    var stop = function() {
-        clearInterval(refreshInterval);
-        $('#pauseButton').removeClass('selected').trigger('selected');
-        $('#playButton').removeClass('selected').trigger('selected');
-        state = CONTROL_STATES.STOPPED;
-    };
-
-    var pause = function() {
-        if (state === CONTROL_STATES.PLAYING) {
-            $('#pauseButton').addClass('selected').trigger('selected');
-            $('#playButton').removeClass('selected').trigger('selected');
-            clearInterval(refreshInterval);
-            state = CONTROL_STATES.PAUSED;
-        }
-    };
-
-    var reset = function() {
-        $('#timeSlider').slider('values', [regionWidget.getDefaultFromYear(), regionWidget.getDefaultToYear()]);
-        stop();
-        regionWidget.updateDateRange(regionWidget.getDefaultFromYear(), regionWidget.getDefaultToYear());
-        taxonomyChart.reset();
-    };
-
-    var updateTimeRange = function(values) {
-        $('#timeFrom').text(values[0]);
-        $('#timeTo').text(values[1]);
-    };
-
-    var _public = {
 
     };
 
     init(config);
-    return _public;
-};
-
-var TaxonomyWidget = function(config){
-
-    var taxonomyChartOptions, query;
-
-    var TaxonomyWidget = function(config){
-        var currentState = regionWidget.getCurrentState();
-        query = currentState.q;
-
-        taxonomyChartOptions = {
-            query: query,
-            subquery: region.buildTimeFacet(),
-            rank: "kingdom",
-            width: 550,
-            height: 420,
-            clickThru: false,
-            notifyChange: "taxonChartChange",
-            collectionsUrl: regionWidget.getUrls().regionsApp,
-            biocacheServicesUrl: regionWidget.getUrls().biocacheServiceUrl,
-            displayRecordsUrl: regionWidget.getUrls().biocacheWebappUrl,
-        };
-
-        taxonomyChart.load(taxonomyChartOptions);
-    };
-
-    var _public = {
-        getQuery: function() {
-            return query;
-        }
-
-    };
-
-    TaxonomyWidget(config);
     return _public;
 };
 

@@ -19,15 +19,7 @@
         <td class="text-right">
             ${g.formatNumber(number: singleSpecies.count, type: 'number')}
         </td>
-    </tr>
-    <tr class="infoRowLinks" style="display: none;">
-        <td>&nbsp;</td>
-        <td colspan="2">
-            <a href="${speciesPageUrl}/${singleSpecies.guid}" class="btn btn-mini" title="View Species page"><i class="fa fa-share-square-o"></i> Species Profile</a>
-            &nbsp;|&nbsp;
-            <a href="${rg.speciesRecordListUrl([guid: singleSpecies.guid, regionFid: regionFid, regionName: regionName, regionType: regionType, regionPid: regionPid, from: from, to: to])}"
-               class="btn btn-mini" title="View list of Records"><i class="fa fa-database"></i> List of Records</a>
-        </td>
+        <td class="text-right"></td>
     </tr>
 </g:each>
 
