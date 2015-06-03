@@ -349,10 +349,17 @@ var RegionWidget = function (config) {
         speciesLoaded: function() {
             $('#species').effect('highlight', {color: '#fee6d2'}, 2000);
             var totalRecords = $('#moreSpeciesZone').attr('totalRecords');
+            var totalPatents = $('#moreSpeciesZone').attr('totalPatents');
             if (isNaN(totalRecords)) {
-                $('#totalRecords').text('');
+                $('#totalRecords').text('N/A');
             } else {
-                $('#totalRecords').text(region.format(parseInt($('#moreSpeciesZone').attr('totalRecords'))));
+                $('#totalRecords').text(region.format(parseInt(totalRecords)));
+            }
+
+            if (isNaN(totalPatents)) {
+                $('#totalPatents').text('N/A');
+            } else {
+                $('#totalPatents').text(region.format(parseInt(totalPatents)));
             }
 
             $('#occurrenceRecords').effect('highlight', {color: '#fee6d2'}, 2000);

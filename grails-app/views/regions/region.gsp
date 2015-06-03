@@ -34,12 +34,12 @@
 
 <div class="row">
     <div class="span12">
-        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span></strong> | Total patents:  <strong><span id="totalPatents">TODO</span></strong></h4>
+        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span></strong> | Total patents:  <strong><span id="totalPatents">Counting...</span></strong></h4>
     </div>
 </div>
 
 <div class="row">
-    <div class="span6">
+    <div class="span7">
         <ul class="nav nav-tabs" id="explorerTabs">
             <li class="active"><a id="speciesTab" href="#speciesTabContent" data-toggle="tab">Species <i class="fa fa-cog fa-spin fa-lg hidden"></i></a></li>
         </ul>
@@ -79,6 +79,7 @@
             </div>
         </div>
     </div>
+
     <div class="span6" id="tabs" role="tabpanel">
 
         <ul class="nav nav-tabs" id="controlsMapTab" role="tablist">

@@ -171,8 +171,9 @@ class MetadataService {
      * @param to
      * @return
      */
-    def getSpecies(String regionFid, String regionType, String regionName, String regionPid, String groupName, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0') {
-        def response = new RESTClient(buildBiocacheSearchOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, groupName == 'ALL_SPECIES' ? null : groupName, isSubgroup, from, to, pageIndex)).get([:]).data
+    def getSpecies(String regionFid, String regionType, String regionName, String regionPid, String groupName, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0', String limit = PAGE_SIZE) {
+        def response = new RESTClient(buildBiocacheSearchOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, groupName == 'ALL_SPECIES' ? null : groupName, isSubgroup, from, to, pageIndex, limit)).get([:]).data
+
         return [
                 totalRecords: response.totalRecords,
                 records: response.facetResults[0]?.fieldResult.collect {result ->
@@ -351,9 +352,9 @@ class MetadataService {
      * @param pageIndex
      * @return
      */
-    String buildBiocacheSearchOccurrencesWsUrl(String regionFid, String regionType, String regionName, String regionPid, String groupName = null, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0') {
+    String buildBiocacheSearchOccurrencesWsUrl(String regionFid, String regionType, String regionName, String regionPid, String groupName = null, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0', String limit = PAGE_SIZE) {
         String url = new URIBuilder("${BIOCACHE_URL}/ws/occurrences/search").with {
-            query = buildSearchOccurrencesWsParams(regionFid, regionType, regionName, regionPid, groupName, isSubgroup, from, to, pageIndex)
+            query = buildSearchOccurrencesWsParams(regionFid, regionType, regionName, regionPid, groupName, isSubgroup, from, to, pageIndex, limit)
             return it
         }.toString()
         log.debug "REST URL generated = ${url}"
@@ -373,13 +374,13 @@ class MetadataService {
      * @param pageIndex
      * @return
      */
-    private Map buildSearchOccurrencesWsParams(String regionFid, String regionType, String regionName, String regionPid, String groupName = null, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = "0") {
+    private Map buildSearchOccurrencesWsParams(String regionFid, String regionType, String regionName, String regionPid, String groupName = null, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = "0", String flimit = PAGE_SIZE) {
         Map params =  [
                 q : buildRegionFacet(regionFid, regionType, regionName, regionPid),
                 facets: 'names_and_lsid',
                 fsort: 'taxon_name',
                 pageSize : 0,
-                flimit: PAGE_SIZE,
+                flimit: flimit,
                 foffset: Integer.parseInt(pageIndex) * Integer.parseInt(PAGE_SIZE),
                 fq: 'rank:(species OR subspecies)'
         ]
