@@ -39,7 +39,7 @@
 </div>
 
 <div class="row">
-    <div class="span6">
+    <div class="span7">
         <ul class="nav nav-tabs" id="explorerTabs">
             <li class="active"><a id="speciesTab" href="#speciesTabContent" data-toggle="tab">Species <i class="fa fa-cog fa-spin fa-lg hidden"></i></a></li>
         </ul>
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    <div class="span6">
+    <div class="span5">
 
         <ul class="nav nav-tabs" id="controlsMapTab">
             <li class="active">
