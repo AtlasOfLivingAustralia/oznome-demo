@@ -1,7 +1,6 @@
 package au.org.ala.regions
 
 import grails.transaction.Transactional
-import groovyx.net.http.RESTClient
 
 /**
  * Get a list of species and annotate them with patent information
