@@ -4,6 +4,13 @@ class UrlMappings {
 
         "/patents" controller: "patent", action: [POST: "patents"]
 
+        "/$regionType/$regionName/patents" (controller: 'speciesIp', action: 'region') {
+            constraints {
+                //do not match controllers
+                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$)).*')
+            }
+        }
+
         "/$regionType/$regionName" (controller: 'regions', action: 'region') {
             constraints {
                 //do not match controllers
