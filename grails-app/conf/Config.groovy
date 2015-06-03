@@ -151,5 +151,7 @@ log4j = {
             'grails.app.taglib.org.grails.plugin.resource',
             'grails.app.resourceMappers.org.grails.plugin.resource'
 
+    info 'grails.app.services.au.org.ala.regions.PatentService'
+
     debug 'grails.app'
 }
