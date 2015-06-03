@@ -23,7 +23,7 @@ To run it locally unzip oznome-demo-local-config.zip in your root folder.
   subgroup: '...'
 }
 ```
-* **subgroupSelected**: triggered when a species is selected. It includes the following data:
+* **speciesSelected**: triggered when a species is selected. It includes the following data:
 ```
 {
   group: '...',
