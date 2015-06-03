@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <div class="span6" id="tabs" role="tabpanel">
+    <div class="span5" id="tabs" role="tabpanel">
 
         <ul class="nav nav-tabs" id="controlsMapTab" role="tablist">
             <li class="active" role="presentation">
@@ -171,7 +171,7 @@
     $( "#tabs" ).tab('show');
     google.setOnLoadCallback(function(){
         graphs({
-            url:"http://localhost:8080/oznome-demo/vis"
+            url:"${createLink(controller:'visualisation', action:'test')}"
         })
     });
 </r:script>

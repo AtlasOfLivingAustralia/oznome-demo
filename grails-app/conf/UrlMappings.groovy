@@ -8,14 +8,14 @@ class UrlMappings {
         "/$regionType/$regionName" (controller: 'regions', action: 'region') {
             constraints {
                 //do not match controllers
-                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$)).*')
+                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$|^visualisation\$)).*')
             }
         }
         
         "/$regionType" (controller: 'regions', action: 'regions') {
             constraints {
                 //do not match controllers
-                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$)).*')
+                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$|^visualisation\$)).*')
             }
         }
 
