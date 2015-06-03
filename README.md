@@ -32,6 +32,13 @@ To run it locally unzip oznome-demo-local-config.zip in your root folder.
 }
 ```
 
+All these event are associted to the `document` element. Eg:
+```
+$(document).on('groupSelected', function() {
+    ...
+});
+```
+
 ## Patent search
 Requires MongoDB to be installed
 
