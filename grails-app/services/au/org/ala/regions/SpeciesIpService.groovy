@@ -48,4 +48,25 @@ class SpeciesIpService {
                 species: ip
         ]
     }
+
+    /**
+     * Get the species with additional patent information
+     */
+    def getSpecies(String regionFid, String regionType, String regionName, String regionPid, String groupName, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0', String limit = MetadataService.PAGE_SIZE) {
+        def allSpecies = metadataService.getSpecies(regionFid, regionType, regionName, regionPid, groupName, isSubgroup, from, to, pageIndex, limit)
+        def names = allSpecies.records.collect { sp -> sp.name }
+        names.unique()
+        log.info "Getting ${names.size()} species for ${regionName}"
+        def patents = patentService.fetchAll(names)
+        def totalPatents = 0
+        for (sp in allSpecies.records) {
+            def pats = patents[sp.name] ?: []
+            sp.patentCount = pats.size()
+            totalPatents += sp.patentCount
+        }
+        allSpecies.totalPatents = totalPatents
+        return allSpecies
+    }
+
+
 }
