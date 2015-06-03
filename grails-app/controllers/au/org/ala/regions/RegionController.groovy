@@ -5,6 +5,7 @@ import au.org.ala.regions.binding.DownloadParams
 class RegionController {
 
     MetadataService metadataService
+    def speciesIpService
 
     /**
      *
@@ -33,7 +34,7 @@ class RegionController {
      * @return
      */
     def showSpecies() {
-        def species = metadataService.getSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.subgroup?:params.group, params.subgroup ? true : false, params.from, params.to, params.pageIndex ?: "0")
+        def species = speciesIpService.getSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.subgroup?:params.group, params.subgroup ? true : false, params.from, params.to, params.pageIndex ?: "0")
 
         render template: 'species', model: [species        : species,
                                             speciesPageUrl : "${metadataService.BIE_URL}/species",
