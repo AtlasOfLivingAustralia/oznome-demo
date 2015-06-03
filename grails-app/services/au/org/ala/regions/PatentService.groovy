@@ -5,6 +5,7 @@ import groovy.time.TimeCategory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
+import javax.annotation.PostConstruct
 import java.util.concurrent.ConcurrentHashMap
 
 import static groovyx.gpars.GParsPool.withPool
@@ -16,8 +17,15 @@ class PatentService {
     static final String SEARCH_RESULTS_TABLE = "#rawresults tbody tr.metadata"
 
     static final int THREADS = 5
-    static final int MAX_CACHE_AGE_MINUTES = 60
+    static final int MAX_CACHE_AGE_MINUTES = 60 * 24 * 7
     static final int CONNECT_TIMEOUT_MILLIS = 30000
+
+    def database
+
+    @PostConstruct
+    def init() {
+        database = new GMongo().getDB("patents")
+    }
 
     def fetchAll(json) {
         Map<String, String> results = [:] as ConcurrentHashMap
@@ -60,15 +68,13 @@ class PatentService {
             ]
         }
 
-        def db = new GMongo().getDB("patents")
-        db.patents.insert([species: speciesName, results: result, cacheTimestamp: new Date()])
+        database.patents.insert([species: speciesName, results: result, cacheTimestamp: new Date()])
 
         result
     }
 
     def getCached(String speciesName) {
-        def db = new GMongo().getDB("patents")
-        def cached = db.patents.findOne(species: speciesName)
+        def cached = database.patents.findOne(species: speciesName)
 
         if (cached) {
             def timeInCache = TimeCategory.minus(new Date(), cached.cacheTimestamp as Date)
