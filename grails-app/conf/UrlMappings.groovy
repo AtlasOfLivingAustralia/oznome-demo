@@ -4,6 +4,8 @@ class UrlMappings {
 
         "/patents" controller: "patent", action: [POST: "patents"]
 
+        "/vis" controller:"visualisation", action: "test"
+
         "/$regionType/$regionName" (controller: 'regions', action: 'region') {
             constraints {
                 //do not match controllers

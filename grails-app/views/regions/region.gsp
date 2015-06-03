@@ -79,35 +79,48 @@
             </div>
         </div>
     </div>
-    <div class="span6">
+    <div class="span6" id="tabs" role="tabpanel">
 
-        <ul class="nav nav-tabs" id="controlsMapTab">
-            <li class="active">
-                <a href="#">Map</a>
+        <ul class="nav nav-tabs" id="controlsMapTab" role="tablist">
+            <li class="active" role="presentation">
+                <a href="#tab-map"  aria-controls="profile" role="tab" data-toggle="tab">Map</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab-graph"  aria-controls="profile" role="tab" data-toggle="tab">Graph</a>
             </li>
         </ul>
 
-        <div id="region-map"></div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab-map">
+                <div id="region-map"></div>
 
-        <div class="accordion" id="opacityControls">
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#opacityControlsContent">
-                        <i class="fa fa-chevron-right"></i>Map opacity controls
-                    </a>
-                </div>
-                <div id="opacityControlsContent" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <label class="checkbox">
-                            <input type="checkbox"name="occurrences" id="toggleOccurrences" checked> Occurrences
-                        </label>
-                        <div id="occurrencesOpacity"></div>
-                        <label class="checkbox">
-                            <input type="checkbox" name="region" id="toggleRegion" checked> Region
-                        </label>
-                        <div id="regionOpacity"></div>
+                <div class="accordion" id="opacityControls">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" href="#opacityControlsContent">
+                                <i class="fa fa-chevron-right"></i>Map opacity controls
+                            </a>
+                        </div>
+                        <div id="opacityControlsContent" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <label class="checkbox">
+                                    <input type="checkbox"name="occurrences" id="toggleOccurrences" checked> Occurrences
+                                </label>
+                                <div id="occurrencesOpacity"></div>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="region" id="toggleRegion" checked> Region
+                                </label>
+                                <div id="regionOpacity"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div id="tab-graph" role="tabpanel" class="tab-pane">
+                <div id="totalPatentByRegion"></div>
+                <div id="patentsByStatus"></div>
+                <div id="top20Applicants"></div>
+                <div id="patentsByDecade"></div>
             </div>
         </div>
     </div>
@@ -148,8 +161,18 @@
             },
             useReflectService: ${useReflect}
         }));
+
+        $("body").on("shown.bs.tab", "#tab-map", function() {
+            regionWidget.getMap().invalidateSize();
+        });
     });
 
+    $( "#tabs" ).tab('show');
+    google.setOnLoadCallback(function(){
+        graphs({
+            url:"http://localhost:8080/oznome-demo/vis"
+        })
+    });
 </r:script>
 </body>
 </html>
