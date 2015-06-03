@@ -199,7 +199,7 @@ var RegionWidget = function (config) {
         // Update state
         updateState({guid: $(row).attr('id')});
         regionMap.reloadRecordsOnMap();
-        $(document).trigger('speciesSelected', [{group: state.group, subgroup: state.subgroup, speciesName: $(row).attr('name')}]);
+        $(document).trigger('speciesSelected', {group: state.group, subgroup: state.subgroup, speciesName: $(row).attr('name')});
     };
 
     /**
@@ -259,7 +259,7 @@ var RegionWidget = function (config) {
             regionMap.reloadRecordsOnMap();
         }
         AjaxAnywhere.dynamicParams=state;
-        $(document).trigger('groupSelected', [{group: state.group}]);
+        $(document).trigger('groupSelected', {group: state.group});
     };
 
     /**
@@ -280,7 +280,7 @@ var RegionWidget = function (config) {
             regionMap.reloadRecordsOnMap();
         }
         AjaxAnywhere.dynamicParams=state;
-        $(document).trigger('subgroupSelected', [{group: state.group, subgroup: subgroup}]);
+        $(document).trigger('subgroupSelected', {group: state.group, subgroup: subgroup});
     };
 
     var getGroupId = function() {
