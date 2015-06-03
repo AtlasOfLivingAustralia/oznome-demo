@@ -34,7 +34,7 @@
 
 <div class="row">
     <div class="span12">
-        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span></strong> | Total patents:  <strong><span id="totalPatents">TODO</span></strong></h4>
+        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span></strong> | Total patents:  <strong><span id="totalPatents">Counting...</span></strong></h4>
     </div>
 </div>
 

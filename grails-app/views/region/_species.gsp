@@ -19,11 +19,13 @@
         <td class="text-right">
             ${g.formatNumber(number: singleSpecies.count, type: 'number')}
         </td>
-        <td class="text-right"></td>
+        <td class="text-right">
+            ${g.formatNumber(number: singleSpecies.patentCount, type: 'number')}
+        </td>
     </tr>
 </g:each>
 
-<tr id="moreSpeciesZone" totalRecords="${species.totalRecords}" style="${species.records.size() > 0 && species.records.size() % 50 == 0 ? "" : "display:none;"}">
+<tr id="moreSpeciesZone" totalRecords="${species.totalRecords}" totalPatents="${species.totalPatents}" style="${species.records.size() > 0 && species.records.size() % 50 == 0 ? "" : "display:none;"}">
     <td colspan="2" class="text-center">
         <a aa-refresh-zones="moreSpeciesZone" id="showMoreSpeciesButton"
            href="${g.createLink(controller: 'region', action: 'showSpecies', params: [pageIndex: pageIndex ? pageIndex + 1 : '1'])}"
