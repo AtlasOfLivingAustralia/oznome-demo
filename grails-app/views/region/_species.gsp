@@ -9,7 +9,7 @@
 </g:if>
 
 <g:each in="${species.records}" var="singleSpecies" status="i">
-    <tr class="link" id="${singleSpecies.guid}">
+    <tr class="link" id="${singleSpecies.guid}" name="${singleSpecies.name}">
         <td>
             ${(pageIndex * 50) + i + 1}.
         </td>
