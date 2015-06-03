@@ -9,6 +9,28 @@ Grails version required: 2.3.11
 
 To run it locally unzip oznome-demo-local-config.zip in your root folder.
 
+## Custom events for Region client UI
+* **groupSelected**: triggered when a species group is selected. It includes the following data:
+```
+{
+  group: '...'
+}
+```
+* **subgroupSelected**: triggered when a species subgroup is selected. It includes the following data:
+```
+{
+  group: '...',
+  subgroup: '...'
+}
+```
+* **subgroupSelected**: triggered when a species is selected. It includes the following data:
+```
+{
+  group: '...',
+  subgroup: '...',
+  speciesName: '...'
+}
+```
 
 ## Patent search
 Requires MongoDB to be installed
