@@ -23,11 +23,11 @@ class SpeciesIpService {
         def regionMetadata = metadataService.regionMetadata(regionType, regionName)
         def fid = metadataService.fidFor(regionType)
         def pid = regionMetadata.pid
-        log.info "Region type: ${regionType}, Region name: ${regionName}, Fid: ${fid}, Pid: ${pid}"
+        log.debug "Region type: ${regionType}, Region name: ${regionName}, Fid: ${fid}, Pid: ${pid}"
         def allSpecies = metadataService.getSpecies(fid, regionType, regionName, pid, null, false, null, null, "0", "-1")
         def names = allSpecies.records.collect { sp -> sp.name }
         names.unique()
-        log.info "Getting ${names.size()} species for ${regionName}"
+        log.debug "Getting ${names.size()} species for ${regionName}"
         def patents = patentService.fetchAll(names)
         def ip = allSpecies.records.collect { sp ->
             def pats = patents[sp.name] ?: []
@@ -52,11 +52,11 @@ class SpeciesIpService {
     /**
      * Get the species with additional patent information
      */
-    def getSpecies(String regionFid, String regionType, String regionName, String regionPid, String groupName, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0', String limit = MetadataService.PAGE_SIZE) {
+    def getSpecies(String regionFid, String regionType, String regionName, String regionPid, String groupName, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0', String limit = "-1") {
         def allSpecies = metadataService.getSpecies(regionFid, regionType, regionName, regionPid, groupName, isSubgroup, from, to, pageIndex, limit)
         def names = allSpecies.records.collect { sp -> sp.name }
         names.unique()
-        log.info "Getting ${names.size()} species for ${regionName}"
+        log.debug "Getting ${names.size()} species for ${regionName}"
         def patents = patentService.fetchAll(names)
         def totalPatents = 0
         for (sp in allSpecies.records) {
@@ -64,6 +64,7 @@ class SpeciesIpService {
             sp.patentCount = pats.size()
             totalPatents += sp.patentCount
         }
+        allSpecies.records.sort { -it.patentCount }
         allSpecies.totalPatents = totalPatents
         return allSpecies
     }
