@@ -11,6 +11,8 @@ class VisualisationController {
         def result = []
         def patentsList = []
 
+        if (params.regionFid)
+
         def species = speciesIpService.getSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.subgroup ?: params.group, params.subgroup ? true : false, params.from, params.to, params.pageIndex ?: "0")
 
         def patents = species.records.collect() { sp -> sp.patents }
@@ -36,10 +38,6 @@ class VisualisationController {
         result += ["top20Applicants", [["Entity", "Number"]] + applicants.findAll {
             i++ < 20
         }.collect { k, v -> [k, v] }]
-
-
-
-
 
         render result as JSON
     }
