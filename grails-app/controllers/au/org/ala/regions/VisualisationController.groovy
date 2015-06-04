@@ -8,7 +8,7 @@ class VisualisationController {
     SpeciesIpService speciesIpService
 
     def visualisation() {
-        def result = []
+        def result =  [:]
         def patentsList = []
         def species
         def patents
@@ -28,19 +28,19 @@ class VisualisationController {
         patentsList = patentsList.unique { patent -> patent.applicationNumber }
 
         //Patents by year
-        result += ["patentByYear", [["Period", "Number"]] + patentsList.countBy {
+        result << ["patentByYear": [["Period", "Number"]] + patentsList.countBy {
             it.filingDate[0..3].toInteger()
         }.collect { k, v -> [k, v] }]
 
         //Patents by status
-        result += ["patentsByStatus", [["Status", "Number"]] + patentsList.countBy {
+        result << ["patentsByStatus": [["Status", "Number"]] + patentsList.countBy {
             it.filingStatus
         }.collect { k, v -> [k, v] }]
 
         // Top 20 Applicants
         def applicants = patentsList.countBy { it.applicants }.sort { -it.value }
         def i = 0
-        result += ["top20Applicants", [["Entity", "Number"]] + applicants.findAll {
+        result << ["top20Applicants": [["Entity", "Number"]] + applicants.findAll {
             i++ < 20
         }.collect { k, v -> [k, v] }]
 
