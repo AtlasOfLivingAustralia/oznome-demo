@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'ipa'}"/>
     <title>Regions | Atlas of Living Australia</title>
     <script src="${g.createLink(controller: 'data',action: 'regionsMetadataJavascript')}"></script>
     <r:require modules="regions"/>
