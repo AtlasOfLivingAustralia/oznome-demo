@@ -95,7 +95,10 @@
                 <a href="#tab-map" aria-controls="profile" role="tab" data-toggle="tab">Map</a>
             </li>
             <li role="presentation">
-                <a href="#tab-graph" aria-controls="profile" role="tab" data-toggle="tab">Graph</a>
+                <a href="#tab-graph" aria-controls="profile" role="tab" data-toggle="tab">Patent Summary</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab-profile" aria-controls="profile" role="tab" data-toggle="tab">Species Profile</a>
             </li>
         </ul>
 
@@ -138,6 +141,9 @@
                 <div id="top20Applicants"></div>
 
                 <div id="patentsByDecade"></div>
+            </div>
+            <div id="tab-profile" role="tabpanel" class="tab-pane">
+
             </div>
         </div>
     </div>
@@ -199,7 +205,7 @@ google.setOnLoadCallback(function(){
             subgroup: undefined
         }
     };
-    graphs(config);
+    var graphs = new Graphs(config);
     });
 </r:script>
 </body>

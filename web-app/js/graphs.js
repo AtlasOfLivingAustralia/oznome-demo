@@ -3,7 +3,7 @@
  */
 
 
-function graphs(options) {
+function Graphs(options) {
     var config = $.extend({
         params: {
             regionFid: undefined,
@@ -77,6 +77,8 @@ function graphs(options) {
         params.taxon_concept_lsid = data.speciesName;
         params.subgroup = data.subgroup;
         graphs.update(params);
+
+        graphs.profile(data);
     });
 
     this.drawPieChart = function (data, options) {
