@@ -37,10 +37,6 @@ class VisualisationController {
             i++ < 20
         }.collect { k, v -> [k, v] }]
 
-
-
-
-
         render result as JSON
     }
 }
