@@ -38,9 +38,11 @@
 <r:layoutResources/>
 <script type="text/javascript">
     $(document).ready(function() {
+        var img = '<g:img dir="images" file="IPAust_stacked_flat_black.jpg" class="img-responsive ipa" />';
+        var txt = "IP Australia administers legislation that governs four types of IP rights: Patents, Trade marks, Designs and Plant breeder's rights";
         $("footer div.ftr-secondary").before("<div class=\"row-fluid ftr-ipa\"> \
-          <div class=\"span4\"> <div class=\"row-fluid\"> <div class=\"span12\"> <img class=\"img-responsive ipa\" src=\"images/IPAust_stacked_flat_black.jpg\"> </div> </div> </div> \
-          <div class=\"span8\"> <p class=\"lead-ipa\">IP Australia administers legislation that governs four types of IP rights: Patents, Trade marks, Designs and Plant breeder's rights</p> </div> \
+          <div class=\"span4\"> <div class=\"row-fluid\"> <div class=\"span12\">" + img + "</div> </div> </div> \
+          <div class=\"span8\"> <p class=\"lead-ipa\">" + txt + "</p> </div> \
          </div>"
         );
     });
