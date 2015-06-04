@@ -10,10 +10,17 @@ class VisualisationController {
     def visualisation() {
         def result = []
         def patentsList = []
+        def species
+        def patents
 
-        def species = speciesIpService.getSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.subgroup ?: params.group, params.subgroup ? true : false, params.from, params.to, params.pageIndex ?: "0")
+        // Check the species name to determine whether should search for a species or a range/region
+        if (!params.speciesName){ // Searches for the region
+            species = speciesIpService.getSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.subgroup ?: params.group, params.subgroup ? true : false, params.from, params.to, params.pageIndex ?: "0")
+            patents = species.records.collect() { sp -> sp.patents }
 
-        def patents = species.records.collect() { sp -> sp.patents }
+        }else{ // Search for only one species
+            patents =  patentService.fetch(params.speciesName)
+        }
 
         patents.each { it -> patentsList.addAll(it) }
 
