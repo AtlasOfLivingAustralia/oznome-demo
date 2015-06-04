@@ -4,18 +4,32 @@ class UrlMappings {
 
         "/patents" controller: "patent", action: [POST: "patents"]
 
+        "/visualisation" controller: "visualisation", action: [POST: "visualisation"]
+
+
+        "/$regionType/$regionName/patents" (controller: 'speciesIp', action: 'region') {
+            constraints {
+                //do not match controllers
+                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$)).*')
+            }
+        }
 
         "/$regionType/$regionName" (controller: 'regions', action: 'region') {
             constraints {
                 //do not match controllers
-                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$|^visualisation\$)).*')
+                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$)).*')
             }
         }
         
         "/$regionType" (controller: 'regions', action: 'regions') {
             constraints {
                 //do not match controllers
-                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$|^visualisation\$)).*')
+                regionType(matches:'(?!(^data\$|^proxy\$|^region\$|^regions\$)).*')
+            }
+        }
+
+        "/species-ip/$action" (controller: 'speciesIp') {
+            constraints {
             }
         }
 
@@ -24,6 +38,7 @@ class UrlMappings {
 				// apply constraints here
 			}
 		}
+
 
 		"/"(controller: 'regions')
 		"500"(view:'/error')

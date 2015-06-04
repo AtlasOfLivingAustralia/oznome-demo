@@ -80,7 +80,7 @@ class PatentService {
             def timeInCache = TimeCategory.minus(new Date(), cached.cacheTimestamp as Date)
             if (timeInCache.minutes > MAX_CACHE_AGE_MINUTES) {
                 log.debug("${speciesName} was cached ${timeInCache.minutes} minutes ago - too old, removing from cache")
-                db.patents.remove(species: speciesName)
+                database.patents.remove(species: speciesName)
                 cached = null
             }
         }

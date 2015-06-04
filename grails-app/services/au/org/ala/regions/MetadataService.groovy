@@ -190,6 +190,34 @@ class MetadataService {
 
     /**
      *
+     * @param regionFid
+     * @param regionType
+     * @param regionName
+     * @param groupName
+     * @param isSubgroup
+     * @param from
+     * @param to
+     * @return
+     */
+    def getSingleSpecies(String regionFid, String regionType, String regionName, String regionPid, String speciesName, String from = null, String to = null) {
+        def response = new RESTClient(buildBiocacheSpeciesOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, speciesName, from, to)).get([:]).data
+
+        return [
+                totalRecords: response.totalRecords,
+                records: response.facetResults[0]?.fieldResult.collect {result ->
+                    List info = Arrays.asList(result.label.split('\\|'))
+                    return [
+                            name: info.get(0),
+                            guid: info.get(1),
+                            commonName: info.size() == 5 ? info.get(2) : '',
+                            count: result.count
+                    ]
+                }
+        ]
+    }
+
+    /**
+     *
      * @param region
      * @return
      */
@@ -361,6 +389,26 @@ class MetadataService {
         return url
     }
 
+    /**
+     *
+     * @param regionFid
+     * @param regionType
+     * @param regionName
+     * @param groupName
+     * @param isSubgroup
+     * @param from
+     * @param to
+     * @param pageIndex
+     * @return
+     */
+    String buildBiocacheSpeciesOccurrencesWsUrl(String regionFid, String regionType, String regionName, String regionPid, String speciesName, String from = null, String to = null) {
+        String url = new URIBuilder("${BIOCACHE_URL}/ws/occurrences/search").with {
+            query = buildSpeciesOccurrencesWsParams(regionFid, regionType, regionName, regionPid, speciesName, from, to)
+            return it
+        }.toString()
+        log.debug "REST URL generated = ${url}"
+        return url
+    }
 
     /**
      *
@@ -395,6 +443,37 @@ class MetadataService {
             params << [fq: params.fq + ' AND ' + buildTimeFacet(from, to)]
         }
 
+        return params
+    }
+
+    /**
+     *
+     * @param regionFid
+     * @param regionType
+     * @param regionName
+     * @param groupName
+     * @param isSubgroup
+     * @param from
+     * @param to
+     * @param pageIndex
+     * @return
+     */
+    private Map buildSpeciesOccurrencesWsParams(String regionFid, String regionType, String regionName, String regionPid, String speciesName, String from = null, String to = null) {
+        Map params =  [
+                q : buildRegionFacet(regionFid, regionType, regionName, regionPid),
+                facets: 'names_and_lsid',
+                fsort: 'taxon_name',
+                pageSize : 0,
+                flimit: "-1",
+                foffset: "0",
+                fq: 'rank:(species OR subspecies)'
+        ]
+
+        params << [fq: params.fq + ' AND ' + "taxon_name:\"${speciesName}\""]
+
+        if (isValidTimeRange(from, to)) {
+            params << [fq: params.fq + ' AND ' + buildTimeFacet(from, to)]
+        }
         return params
     }
 

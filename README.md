@@ -11,20 +11,20 @@ To run it locally unzip oznome-demo-local-config.zip in your root folder.
 
 ## Custom events for Region client UI
 * **groupSelected**: triggered when a species group is selected. It includes the following data:
-```
+```javascript
 {
   group: '...'
 }
 ```
 * **subgroupSelected**: triggered when a species subgroup is selected. It includes the following data:
-```
+```javascript
 {
   group: '...',
   subgroup: '...'
 }
 ```
 * **speciesSelected**: triggered when a species is selected. It includes the following data:
-```
+```javascript
 {
   group: '...',
   subgroup: '...',
@@ -33,8 +33,9 @@ To run it locally unzip oznome-demo-local-config.zip in your root folder.
 ```
 
 All these event are associted to the `document` element. Eg:
-```
-$(document).on('groupSelected', function() {
+```javascript
+$(document).on('groupSelected', function(e, data) {
+    console.log(data.group);
     ...
 });
 ```
