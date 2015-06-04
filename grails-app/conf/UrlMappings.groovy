@@ -29,11 +29,17 @@ class UrlMappings {
             }
         }
 
+        "/species-ip/$action" (controller: 'speciesIp') {
+            constraints {
+            }
+        }
+
 		"/$controller/$action?/$id?(.$format)?"{
 			constraints {
 				// apply constraints here
 			}
 		}
+
 
 		"/"(controller: 'regions')
 		"500"(view:'/error')
