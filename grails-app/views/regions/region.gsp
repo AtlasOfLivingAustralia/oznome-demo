@@ -1,21 +1,25 @@
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="layout" content="${grailsApplication.config.layout.skin ?: 'main'}"/>
     <title>${region.name} | Atlas of Living Australia</title>
     <r:require modules="region"/>
 </head>
+
 <body class="nav-locations">
 
 <div class="row">
     <div class="span12">
         <ul class="breadcrumb pull-left">
             <rg:breadcrumbTrail/>
-            <li><a href="${grailsApplication.config.grails.serverURL}#rt=${region.type}">Regions</a> <span class="divider"><i class="fa fa-arrow-right"></i></span></li>
+            <li><a href="${grailsApplication.config.grails.serverURL}#rt=${region.type}">Regions</a> <span
+                    class="divider"><i class="fa fa-arrow-right"></i></span></li>
             <g:if test="${region.parent}">
-                <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.type}/${region.parent.name}">${region.parent.name}</a> <span class="divider"><i class="fa fa-arrow-right"></i></span></li>
+                <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.type}/${region.parent.name}">${region.parent.name}</a> <span
+                        class="divider"><i class="fa fa-arrow-right"></i></span></li>
                 <g:if test="${region.parent.child}">
-                    <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.child.type}/${region.parent.child.name}">${region.parent.child.name}</a> <span class="divider"><i class="fa fa-arrow-right"></i></span></li>
+                    <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.child.type}/${region.parent.child.name}">${region.parent.child.name}</a> <span
+                            class="divider"><i class="fa fa-arrow-right"></i></span></li>
                 </g:if>
             </g:if>
             <li class="active">${region.name}</li>
@@ -34,24 +38,28 @@
 
 <div class="row">
     <div class="span12">
-        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span></strong> | Total patents:  <strong><span id="totalPatents">Counting...</span></strong></h4>
+        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span>
+        </strong> | Total patents:  <strong><span id="totalPatents">Counting...</span></strong></h4>
     </div>
 </div>
 
 <div class="row">
     <div class="span7">
         <ul class="nav nav-tabs" id="explorerTabs">
-            <li class="active"><a id="speciesTab" href="#speciesTabContent" data-toggle="tab">Species <i class="fa fa-cog fa-spin fa-lg hidden"></i></a></li>
+            <li class="active"><a id="speciesTab" href="#speciesTabContent" data-toggle="tab">Species <i
+                    class="fa fa-cog fa-spin fa-lg hidden"></i></a></li>
         </ul>
+
         <div class="tab-content">
             <div class="tab-pane active" id="speciesTabContent">
                 <table class="table table-condensed table-hover" id="groups">
                     <thead>
-                        <tr>
-                            <th class="text-center">Group</th>
-                        </tr>
+                    <tr>
+                        <th class="text-center">Group</th>
+                    </tr>
                     </thead>
-                    <aa:zone id="groupsZone" tag="tbody" href="${g.createLink(controller: 'region', action: 'showGroups', params: [regionFid: region.fid,regionType: region.type, regionName: region.name, regionPid: region.pid])}"
+                    <aa:zone id="groupsZone" tag="tbody"
+                             href="${g.createLink(controller: 'region', action: 'showGroups', params: [regionFid: region.fid, regionType: region.type, regionName: region.name, regionPid: region.pid])}"
                              jsAfter="regionWidget.groupsLoaded();">
                         <tr class="spinner">
                             <td class="spinner text-center">
@@ -62,11 +70,11 @@
                 </table>
                 <table class="table table-condensed table-hover" id="species">
                     <thead>
-                        <tr>
-                            <th colspan="2" class="text-center">Species</th>
-                            <th class="text-right">Records</th>
-                            <th class="text-right">Patents</th>
-                        </tr>
+                    <tr>
+                        <th colspan="2" class="text-center">Species</th>
+                        <th class="text-right">Records</th>
+                        <th class="text-right">Patents</th>
+                    </tr>
                     </thead>
                     <aa:zone id="speciesZone" tag="tbody" jsAfter="regionWidget.speciesLoaded();">
                         <tr class="spinner">
@@ -84,10 +92,10 @@
 
         <ul class="nav nav-tabs" id="controlsMapTab" role="tablist">
             <li class="active" role="presentation">
-                <a href="#tab-map"  aria-controls="profile" role="tab" data-toggle="tab">Map</a>
+                <a href="#tab-map" aria-controls="profile" role="tab" data-toggle="tab">Map</a>
             </li>
             <li role="presentation">
-                <a href="#tab-graph"  aria-controls="profile" role="tab" data-toggle="tab">Graph</a>
+                <a href="#tab-graph" aria-controls="profile" role="tab" data-toggle="tab">Graph</a>
             </li>
         </ul>
 
@@ -102,25 +110,33 @@
                                 <i class="fa fa-chevron-right"></i>Map opacity controls
                             </a>
                         </div>
+
                         <div id="opacityControlsContent" class="accordion-body collapse">
                             <div class="accordion-inner">
                                 <label class="checkbox">
-                                    <input type="checkbox"name="occurrences" id="toggleOccurrences" checked> Occurrences
+                                    <input type="checkbox" name="occurrences" id="toggleOccurrences"
+                                           checked> Occurrences
                                 </label>
+
                                 <div id="occurrencesOpacity"></div>
                                 <label class="checkbox">
                                     <input type="checkbox" name="region" id="toggleRegion" checked> Region
                                 </label>
+
                                 <div id="regionOpacity"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div id="tab-graph" role="tabpanel" class="tab-pane">
                 <div id="totalPatentByRegion"></div>
+
                 <div id="patentsByStatus"></div>
+
                 <div id="top20Applicants"></div>
+
                 <div id="patentsByDecade"></div>
             </div>
         </div>
@@ -161,18 +177,29 @@
                 ne: {lat: ${region.bbox?.maxLat}, lng: ${region.bbox?.maxLng}}
             },
             useReflectService: ${useReflect}
-        }));
+    }));
 
-        $("body").on("shown.bs.tab", "#tab-map", function() {
-            regionWidget.getMap().invalidateSize();
-        });
+    $("body").on("shown.bs.tab", "#tab-map", function() {
+        regionWidget.getMap().invalidateSize();
     });
+});
 
-    $( "#tabs" ).tab('show');
-    google.setOnLoadCallback(function(){
-        graphs({
-            url:"${createLink(controller:'visualisation', action:'test')}"
-        })
+$( "#tabs" ).tab('show');
+google.setOnLoadCallback(function(){
+    var state = regionWidget.getCurrentState();
+    var config = {
+        url:"${createLink(controller: 'visualisation', action: 'test')}",
+        params: {
+            regionFid: state.regionFid,
+            regionType: state.regionType,
+            regionName: state.regionName,
+            regionPid: state.regionPid,
+            taxon_concept_lsid: undefined,
+            group: 'ALL_SPECIES',
+            subgroup: undefined
+        }
+    };
+    graphs(config);
     });
 </r:script>
 </body>
