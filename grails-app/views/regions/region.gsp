@@ -4,6 +4,11 @@
     <meta name="layout" content="${grailsApplication.config.layout.skin ?: 'main'}"/>
     <title>${region.name} | Atlas of Living Australia</title>
     <r:require modules="region"/>
+    <style>
+        .borderless td, .borderless th {
+            border: none;
+        }
+    </style>
 </head>
 
 <body class="nav-locations">
@@ -142,8 +147,10 @@
 
                 <div id="patentsByDecade"></div>
             </div>
-            <div id="tab-profile" role="tabpanel" class="tab-pane">
 
+            <div id="tab-profile" role="tabpanel" class="tab-pane">
+                <div id="speciesProfile"></div>
+                <div id="patentProfile"></div>
             </div>
         </div>
     </div>
@@ -195,6 +202,11 @@ google.setOnLoadCallback(function(){
     var state = regionWidget.getCurrentState();
     var config = {
         url:"${createLink(controller: 'visualisation', action: 'test')}",
+        profileUrl: "${createLink(controller: 'patents')}",
+        profileId: 'patentProfile',
+        speciesProfileId:'speciesProfile',
+        tmplId: 'patents_tmpl',
+        speciesTmplId: 'species_tmpl',
         params: {
             regionFid: state.regionFid,
             regionType: state.regionType,
@@ -208,5 +220,10 @@ google.setOnLoadCallback(function(){
     var graphs = new Graphs(config);
     });
 </r:script>
+
+<script type="text/html" id="patents_tmpl">
+</script>
+<script type="text/html" id="species_tmpl">
+</script>
 </body>
 </html>
