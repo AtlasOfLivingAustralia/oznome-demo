@@ -58,16 +58,15 @@ class SpeciesIpService {
         names.unique()
         log.debug "Getting ${names.size()} species for ${regionName}"
         def patents = patentService.fetchAll(names)
+
         def totalPatents = 0
         for (sp in allSpecies.records) {
-            def pats = patents[sp.name] ?: []
-            sp.patentCount = pats.size()
+            sp.patents = patents[sp.name] ?: []
+            sp.patentCount = sp.patents.size()
             totalPatents += sp.patentCount
         }
         allSpecies.records.sort { -it.patentCount }
         allSpecies.totalPatents = totalPatents
         return allSpecies
     }
-
-
 }
