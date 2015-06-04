@@ -6,6 +6,7 @@ modules = {
 
         resource url: '/js/regions.js'
         resource url: '/css/regions.css', attrs:[media:'all']
+        resource url: '/css/ipa.css', attrs:[media:'all']
     }
 
     region {
@@ -13,6 +14,7 @@ modules = {
 
         resource url: '/js/region.js'
         resource url: '/css/regions.css', attrs:[media:'all']
+        resource url: '/css/ipa.css', attrs:[media:'all']
     }
 
     jquery {
