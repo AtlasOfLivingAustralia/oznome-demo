@@ -11,7 +11,7 @@ function Graphs(options) {
             regionType: undefined,
             regionName: undefined,
             regionPid: undefined,
-            taxon_concept_lsid: undefined,
+            speciesName: undefined,
             group: 'ALL_SPECIES',
             subgroup: undefined
         }
@@ -26,22 +26,28 @@ function Graphs(options) {
         });
         $.ajax({
             url: url,
-            method: 'GET',
+            method: 'POST',
             data: params,
             success: function (data) {
                 console.log(typeof data);
 
                 graphs.drawColumnChart(data.patentsByStatus, {
                     title: 'Status of Patents',
-                    id: 'patentsByStatus'
+                    id: 'patentsByStatus',
+                    height:200,
+                    hAxis:{
+                        slantedTextAngle:45
+                    }
                 });
                 graphs.drawColumnChart(data.top20Applicants, {
                     title: 'Top 20 applicants',
-                    id: 'top20Applicants'
+                    id: 'top20Applicants',
+                    height:200
                 });
-                graphs.drawColumnChart(data.patentsByDecade, {
+                graphs.drawColumnChart(data.patentByYear, {
                     title: 'Patents by filing date',
-                    id: 'patentsByDecade'
+                    id: 'patentsByDecade',
+                    height:200
                 });
             }
         });
@@ -53,7 +59,7 @@ function Graphs(options) {
         console.log(data);
         var params = config.params;
         params.group = data.group;
-        params.taxon_concept_lsid = undefined;
+        params.speciesName = undefined;
         params.subgroup = undefined;
         graphs.update(params);
     });
@@ -64,7 +70,7 @@ function Graphs(options) {
 
         var params = config.params;
         params.group = data.group;
-        params.taxon_concept_lsid = undefined;
+        params.speciesName = undefined;
         params.subgroup = data.subgroup;
         graphs.update(params);
     });
@@ -75,7 +81,7 @@ function Graphs(options) {
 
         var params = config.params;
         params.group = data.group;
-        params.taxon_concept_lsid = data.speciesName;
+        params.speciesName = data.speciesName;
         params.subgroup = data.subgroup;
         graphs.update(params);
 
@@ -107,32 +113,39 @@ function Graphs(options) {
     };
 
     this.getProfile = function (data) {
+        var params = $.extend({},config.params);
+        params = $.extend(params, data);
+        params.name = data.speciesName;
+//        delete params.speciesName;
+        ['#'+config.profileId, '#'+config.speciesProfileId].forEach(function (item) {
+            $(item).html('');
+        });
         $.ajax({
             url: config.profileUrl,
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify([data.speciesName]),
+            method: 'GET',
+            data: params,
             success: function (dp) {
-                dp.lsid = dp.lsid || 'urn:lsid:biodiversity.org.au:afd.taxon:60c4a2a5-1045-44b0-95ff-9c1a81f50da7';
+                var record = dp.records[0]
+                dp.lsid = record.guid;
                 $.ajax({
-                    url:config.bieUrl+dp.lsid+'.json',
+                    url:config.bieUrl+record.guid+'.json',
 //                    method:'JSONP',
                     dataType:'JSONP',
                     success: function(profile){
-                        var img = profile.images[0].repoLocation;
-                        var dp = {
-                            name:'test',
-                            commonName:'test1',
-                            patentCount:'1',
-                            occurrenceCount:3
-                        };
-                        dp.img = img;
-                        var profileData = tmpl(config.speciesTmplId, dp);
+                        var img = profile.images || [];
+                        if(img[0]){
+                            img = img[0].repoLocation
+                        } else {
+                            img = '';
+                        }
+                        var record = dp.records[0]
+                        record.img = img;
+                        var profileData = tmpl(config.speciesTmplId, record);
                         $('#'+config.speciesProfileId).html(profileData);
                     }
                 })
-
-                var profileData = tmpl(config.tmplId, {patents: dp[data.speciesName]});
+                var patents = dp.records[0].patents;
+                var profileData = tmpl(config.tmplId, {patents: patents});
                 $('#'+config.profileId).html(profileData);
             }
         })
@@ -195,14 +208,14 @@ $('#species_tmpl').html(
     '<table width="100%" class="table borderless">' +
         "<th>Species Profile</th>"+
         '<tr>' +
-            '<td><label>Name:</label></td><td><%=name%></td>' +
+            '<td><label>Name:</label></td><td><a target="_blank" href="http://bie.ala.org.au/species/<%=guid%>"><%=name%></a></td>' +
             '<td rowspan="4"><img src="<%=img%>" style="height:200px"></td>' +
         '</tr>' +
         '<tr>'+
             '<td><label>Common name:</label></td><td><%=commonName%></td>' +
         '</tr>'+
         '<tr>'+
-            '<td><label>Occurrence records:</label></td><td><%=occurrenceCount%></td>' +
+            '<td><label>Occurrence records:</label></td><td><%=count%></td>' +
         '</tr>'+
         '<tr>'+
             '<td><label>Patent count:</label></td><td><%=patentCount%></td>' +

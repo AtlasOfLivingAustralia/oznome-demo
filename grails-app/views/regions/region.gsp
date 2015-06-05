@@ -138,7 +138,7 @@
                 </div>
             </div>
 
-            <div id="tab-graph" role="tabpanel" class="tab-pane">
+            <div id="tab-graph" role="tabpanel" class="tab-pane" style="height:560px">
                 <div id="totalPatentByRegion"></div>
 
                 <div id="patentsByStatus"></div>
@@ -148,7 +148,7 @@
                 <div id="patentsByDecade"></div>
             </div>
 
-            <div id="tab-profile" role="tabpanel" class="tab-pane">
+            <div id="tab-profile" role="tabpanel" class="tab-pane" style="height:560px">
                 <div id="speciesProfile"></div>
                 <div id="patentProfile"></div>
             </div>
@@ -201,8 +201,8 @@ $( "#tabs" ).tab('show');
 google.setOnLoadCallback(function(){
     var state = regionWidget.getCurrentState();
     var config = {
-        url:"${createLink(controller: 'visualisation', action: 'test')}",
-        profileUrl: "${createLink(controller: 'patents')}",
+        url:"${createLink(controller: 'visualisation')}",
+        profileUrl: "${createLink(controller: 'species-ip', action:'species')}",
         profileId: 'patentProfile',
         speciesProfileId:'speciesProfile',
         tmplId: 'patents_tmpl',
