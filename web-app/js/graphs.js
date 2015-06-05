@@ -42,12 +42,18 @@ function Graphs(options) {
                 graphs.drawColumnChart(data.top20Applicants, {
                     title: 'Top 20 applicants',
                     id: 'top20Applicants',
-                    height:200
+                    height:200,
+                    hAxis:{
+                        slantedTextAngle:45
+                    }
                 });
                 graphs.drawColumnChart(data.patentByYear, {
                     title: 'Patents by filing date',
                     id: 'patentsByDecade',
-                    height:200
+                    height:200,
+                    hAxis:{
+                        slantedTextAngle:45
+                    }
                 });
             }
         });
