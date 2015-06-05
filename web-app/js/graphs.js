@@ -35,7 +35,9 @@ function Graphs(options) {
                     title: 'Status of Patents',
                     id: 'patentsByStatus',
                     height:200,
+                    width:'100%',
                     hAxis:{
+                        slantedText:true,
                         slantedTextAngle:45
                     }
                 });
@@ -43,7 +45,9 @@ function Graphs(options) {
                     title: 'Top 20 applicants',
                     id: 'top20Applicants',
                     height:200,
+                    width:'100%',
                     hAxis:{
+                        slantedText:true,
                         slantedTextAngle:45
                     }
                 });
@@ -51,7 +55,9 @@ function Graphs(options) {
                     title: 'Patents by filing date',
                     id: 'patentsByDecade',
                     height:200,
+                    width:'100%',
                     hAxis:{
+                        slantedText:true,
                         slantedTextAngle:45
                     }
                 });
