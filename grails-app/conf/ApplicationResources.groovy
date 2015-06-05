@@ -12,6 +12,7 @@ modules = {
     region {
         dependsOn 'jquery', 'jquery-ui', 'jquery-ui-slider-pips', 'jquery-bbq', 'ajaxanywhere', 'map', 'charts', 'number-functions', 'font-awesome'
 
+        resource url: '/js/graphs.js'
         resource url: '/js/region.js'
         resource url: '/css/regions.css', attrs:[media:'all']
         resource url: '/css/ipa.css', attrs:[media:'all']

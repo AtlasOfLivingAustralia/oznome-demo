@@ -4,18 +4,27 @@
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'ipa'}"/>
     <title>${region.name} | Atlas of Living Australia</title>
     <r:require modules="region"/>
+    <style>
+        .borderless td, .borderless th {
+            border: none;
+        }
+    </style>
 </head>
+
 <body class="nav-locations">
 
 <div class="row">
     <div class="span12">
         <ul class="breadcrumb pull-left">
             <rg:breadcrumbTrail/>
-            <li><a href="${grailsApplication.config.grails.serverURL}#rt=${region.type}">Regions</a> <span class="divider"><i class="fa fa-arrow-right"></i></span></li>
+            <li><a href="${grailsApplication.config.grails.serverURL}#rt=${region.type}">Regions</a> <span
+                    class="divider"><i class="fa fa-arrow-right"></i></span></li>
             <g:if test="${region.parent}">
-                <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.type}/${region.parent.name}">${region.parent.name}</a> <span class="divider"><i class="fa fa-arrow-right"></i></span></li>
+                <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.type}/${region.parent.name}">${region.parent.name}</a> <span
+                        class="divider"><i class="fa fa-arrow-right"></i></span></li>
                 <g:if test="${region.parent.child}">
-                    <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.child.type}/${region.parent.child.name}">${region.parent.child.name}</a> <span class="divider"><i class="fa fa-arrow-right"></i></span></li>
+                    <li><a href="${grailsApplication.config.grails.serverURL}/${region.parent.child.type}/${region.parent.child.name}">${region.parent.child.name}</a> <span
+                            class="divider"><i class="fa fa-arrow-right"></i></span></li>
                 </g:if>
             </g:if>
             <li class="active">${region.name}</li>
@@ -34,24 +43,28 @@
 
 <div class="row">
     <div class="span12">
-        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span></strong> | Total patents:  <strong><span id="totalPatents">Counting...</span></strong></h4>
+        <h4 id="occurrenceRecords">ALA Occurrence records: <strong><span id="totalRecords">Counting...</span>
+        </strong> | Total patents:  <strong><span id="totalPatents">Counting...</span></strong></h4>
     </div>
 </div>
 
 <div class="row">
     <div class="span7">
         <ul class="nav nav-tabs" id="explorerTabs">
-            <li class="active"><a id="speciesTab" href="#speciesTabContent" data-toggle="tab">Species <i class="fa fa-cog fa-spin fa-lg hidden"></i></a></li>
+            <li class="active"><a id="speciesTab" href="#speciesTabContent" data-toggle="tab">Species <i
+                    class="fa fa-cog fa-spin fa-lg hidden"></i></a></li>
         </ul>
+
         <div class="tab-content">
             <div class="tab-pane active" id="speciesTabContent">
                 <table class="table table-condensed table-hover" id="groups">
                     <thead>
-                        <tr>
-                            <th class="text-center">Group</th>
-                        </tr>
+                    <tr>
+                        <th class="text-center">Group</th>
+                    </tr>
                     </thead>
-                    <aa:zone id="groupsZone" tag="tbody" href="${g.createLink(controller: 'region', action: 'showGroups', params: [regionFid: region.fid,regionType: region.type, regionName: region.name, regionPid: region.pid])}"
+                    <aa:zone id="groupsZone" tag="tbody"
+                             href="${g.createLink(controller: 'region', action: 'showGroups', params: [regionFid: region.fid, regionType: region.type, regionName: region.name, regionPid: region.pid])}"
                              jsAfter="regionWidget.groupsLoaded();">
                         <tr class="spinner">
                             <td class="spinner text-center">
@@ -62,11 +75,11 @@
                 </table>
                 <table class="table table-condensed table-hover" id="species">
                     <thead>
-                        <tr>
-                            <th colspan="2" class="text-center">Species</th>
-                            <th class="text-right">Records</th>
-                            <th class="text-right">Patents</th>
-                        </tr>
+                    <tr>
+                        <th colspan="2" class="text-center">Species</th>
+                        <th class="text-right">Records</th>
+                        <th class="text-right">Patents</th>
+                    </tr>
                     </thead>
                     <aa:zone id="speciesZone" tag="tbody" jsAfter="regionWidget.speciesLoaded();">
                         <tr class="spinner">
@@ -79,35 +92,65 @@
             </div>
         </div>
     </div>
-    <div class="span5">
 
-        <ul class="nav nav-tabs" id="controlsMapTab">
-            <li class="active">
-                <a href="#">Map</a>
+    <div class="span5" id="tabs" role="tabpanel">
+
+        <ul class="nav nav-tabs" id="controlsMapTab" role="tablist">
+            <li class="active" role="presentation">
+                <a href="#tab-map" aria-controls="profile" role="tab" data-toggle="tab">Map</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab-graph" aria-controls="profile" role="tab" data-toggle="tab">Patent Summary</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab-profile" aria-controls="profile" role="tab" data-toggle="tab">Species Profile</a>
             </li>
         </ul>
 
-        <div id="region-map"></div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab-map">
+                <div id="region-map"></div>
 
-        <div class="accordion" id="opacityControls">
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#opacityControlsContent">
-                        <i class="fa fa-chevron-right"></i>Map opacity controls
-                    </a>
-                </div>
-                <div id="opacityControlsContent" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <label class="checkbox">
-                            <input type="checkbox"name="occurrences" id="toggleOccurrences" checked> Occurrences
-                        </label>
-                        <div id="occurrencesOpacity"></div>
-                        <label class="checkbox">
-                            <input type="checkbox" name="region" id="toggleRegion" checked> Region
-                        </label>
-                        <div id="regionOpacity"></div>
+                <div class="accordion" id="opacityControls">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" href="#opacityControlsContent">
+                                <i class="fa fa-chevron-right"></i>Map opacity controls
+                            </a>
+                        </div>
+
+                        <div id="opacityControlsContent" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="occurrences" id="toggleOccurrences"
+                                           checked> Occurrences
+                                </label>
+
+                                <div id="occurrencesOpacity"></div>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="region" id="toggleRegion" checked> Region
+                                </label>
+
+                                <div id="regionOpacity"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="tab-graph" role="tabpanel" class="tab-pane" style="height:560px">
+                <div id="totalPatentByRegion"></div>
+
+                <div id="patentsByStatus"></div>
+
+                <div id="top20Applicants"></div>
+
+                <div id="patentsByDecade"></div>
+            </div>
+
+            <div id="tab-profile" role="tabpanel" class="tab-pane" style="height:560px">
+                <div id="speciesProfile"></div>
+                <div id="patentProfile"></div>
             </div>
         </div>
     </div>
@@ -147,9 +190,40 @@
                 ne: {lat: ${region.bbox?.maxLat}, lng: ${region.bbox?.maxLng}}
             },
             useReflectService: ${useReflect}
-        }));
-    });
+    }));
 
+    $("body").on("shown.bs.tab", "#tab-map", function() {
+        regionWidget.getMap().invalidateSize();
+    });
+});
+
+$( "#tabs" ).tab('show');
+google.setOnLoadCallback(function(){
+    var state = regionWidget.getCurrentState();
+    var config = {
+        url:"${createLink(controller: 'visualisation')}",
+        profileUrl: "${createLink(controller: 'species-ip', action:'species')}",
+        profileId: 'patentProfile',
+        speciesProfileId:'speciesProfile',
+        tmplId: 'patents_tmpl',
+        speciesTmplId: 'species_tmpl',
+        params: {
+            regionFid: state.regionFid,
+            regionType: state.regionType,
+            regionName: state.regionName,
+            regionPid: state.regionPid,
+            taxon_concept_lsid: undefined,
+            group: 'ALL_SPECIES',
+            subgroup: undefined
+        }
+    };
+    var graphs = new Graphs(config);
+    });
 </r:script>
+
+<script type="text/html" id="patents_tmpl">
+</script>
+<script type="text/html" id="species_tmpl">
+</script>
 </body>
 </html>
