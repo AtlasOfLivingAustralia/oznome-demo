@@ -68,6 +68,12 @@ class MetadataService {
         CONFIG_DIR = grailsApplication.config.config_dir
     }
 
+    def restGet(String url) {
+        def client = new RESTClient(url)
+
+        return client.get(headers: ['User-Agent': 'oznome-demo', 'Accept': 'application/json']).data
+    }
+
     /**
      *
      * @param regionName
@@ -94,7 +100,7 @@ class MetadataService {
 
         emblemGuids.sort({it.key}).each {key, guid ->
             String emblemInfoUrl = "${BIE_URL}/ws/species/moreInfo/${guid}.json"
-            def emblemInfo = new RESTClient(emblemInfoUrl).get([:]).data
+            def emblemInfo = restGet(emblemInfoUrl)
             emblemMetadata << [
                 "imgUrl":  emblemInfo?.images && emblemInfo?.images[0]?.thumbnail ? emblemInfo?.images[0]?.thumbnail : DEFAULT_IMG_URL,
                 "scientificName": emblemInfo?.taxonConcept?.nameString,
@@ -115,7 +121,7 @@ class MetadataService {
      * @return
      */
     List getGroups(String regionFid, String regionType, String regionName, String regionPid) {
-        def responseGroups = new RESTClient("${BIOCACHE_URL}/ws/explore/hierarchy").get([:]).data
+        def responseGroups = restGet("${BIOCACHE_URL}/ws/explore/hierarchy")
         Map subgroupsWithRecords = getSubgroupsWithRecords(regionFid, regionType, regionName, regionPid)
 
         List groups = [] << [name: 'ALL_SPECIES', commonName: 'ALL_SPECIES']
@@ -151,7 +157,7 @@ class MetadataService {
 
         log.debug("URL to retrieve subgroups with records = $url")
 
-        def response = new RESTClient(url).get([:]).data
+        def response = restGet(url)
 
         Map subgroups = [:]
         response?.facetResults[0]?.fieldResult.each {subgroup ->
@@ -172,7 +178,7 @@ class MetadataService {
      * @return
      */
     def getSpecies(String regionFid, String regionType, String regionName, String regionPid, String groupName, Boolean isSubgroup = false, String from = null, String to = null, String pageIndex = '0', String limit = PAGE_SIZE) {
-        def response = new RESTClient(buildBiocacheSearchOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, groupName == 'ALL_SPECIES' ? null : groupName, isSubgroup, from, to, pageIndex, limit)).get([:]).data
+        def response = restGet(buildBiocacheSearchOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, groupName == 'ALL_SPECIES' ? null : groupName, isSubgroup, from, to, pageIndex, limit))
 
         return [
                 totalRecords: response.totalRecords,
@@ -200,7 +206,7 @@ class MetadataService {
      * @return
      */
     def getSingleSpecies(String regionFid, String regionType, String regionName, String regionPid, String speciesName, String from = null, String to = null) {
-        def response = new RESTClient(buildBiocacheSpeciesOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, speciesName, from, to)).get([:]).data
+        def response = restGet(buildBiocacheSpeciesOccurrencesWsUrl(regionFid, regionType, regionName, regionPid, speciesName, from, to))
 
         return [
                 totalRecords: response.totalRecords,

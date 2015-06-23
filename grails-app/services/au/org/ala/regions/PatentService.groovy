@@ -32,16 +32,21 @@ class PatentService {
 
         withPool(THREADS) {
             json.eachParallel {
-                def result = getCached(it)
-                if (result == null) {
-                    result = fetch(it)
-                } else {
-                    log.debug("${it} was cached")
+                try {
+                    def result = getCached(it)
+                    if (result == null) {
+                        result = fetch(it)
+                    } else {
+                        log.debug("${it} was cached")
+                    }
+                    results << [(it): result]
+                } catch (Exception ex) {
+                    def elt = ex.stackTrace[0]
+                    log.error("Can't retrieve information for ${it}: ${ex.message}: ${elt.fileName}:${elt.lineNumber}")
+                    results << [(it): []]
                 }
-                results << [(it): result]
             }
         }
-
         results
     }
 

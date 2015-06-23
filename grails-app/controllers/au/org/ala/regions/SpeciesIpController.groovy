@@ -12,6 +12,13 @@ class SpeciesIpController {
         render ip as JSON
     }
 
+    def list() {
+        def species = speciesIpService.getSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.subgroup?:params.group, params.subgroup ? true : false, params.from, params.to, params.pageIndex ?: "0")
+
+        render species as JSON
+    }
+
+
     def species() {
         def species = speciesIpService.getSingleSpecies(params.regionFid, params.regionType, params.regionName, params.regionPid, params.name, params.from, params.to)
 
